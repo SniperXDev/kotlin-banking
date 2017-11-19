@@ -14,7 +14,7 @@ class BankingApplication {
   @Autowired
   fun registerTracking(cfg : EventHandlingConfiguration) {
     logger.info("<< TrackingProcessingGroup registered")
-    cfg.registerTrackingProcessor("dk.lldata.axon.banking.balance")
+    cfg.registerTrackingProcessor("TrackingProcessingGroup")
   }
 }
 

@@ -7,9 +7,6 @@ import org.axonframework.commandhandling.model.AggregateIdentifier
 import org.axonframework.commandhandling.model.AggregateLifecycle
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.spring.stereotype.Aggregate
-import javax.persistence.Basic
-import javax.persistence.Entity
-import javax.persistence.Id
 
 private val logger = KotlinLogging.logger {}
 
@@ -25,7 +22,7 @@ class Account {
 
   @CommandHandler
   constructor(cmd : CreateAccountCommand) {
-    AggregateLifecycle.apply(AccountCreatedEvent(cmd.accountId, cmd.overdraftLimit, 0))
+    AggregateLifecycle.apply(AccountCreatedEvent(cmd.accountId, ID.uuid(), cmd.overdraftLimit, 0))
   }
 
   @CommandHandler

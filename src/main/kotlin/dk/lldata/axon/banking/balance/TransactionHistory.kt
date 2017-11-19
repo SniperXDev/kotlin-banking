@@ -1,8 +1,6 @@
 package dk.lldata.axon.banking.balance
 
 import dk.lldata.axon.banking.coreapi.BalanceUpdatedEvent
-import dk.lldata.axon.banking.coreapi.MoneyDepositedEvent
-import dk.lldata.axon.banking.coreapi.MoneyWithdrawnEvent
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.springframework.data.jpa.repository.JpaRepository
@@ -21,7 +19,7 @@ class TransactionHistoryEventHandler(
 ) {
   @EventHandler
   fun on(event : BalanceUpdatedEvent) {
-    repo.save(TransactionHistory(event.accountId, event.balance))
+    repo.save(TransactionHistory(event.accountId, event.balance, event.txId))
   }
 
   @GetMapping("/history/{accountId}")
@@ -34,6 +32,7 @@ class TransactionHistoryEventHandler(
 class TransactionHistory(
     @Basic var accountId : String = "",
     @Basic var balance : Int = 0,
+    @Basic var txId: String = "",
     @GeneratedValue @Id var id : Long = 0
     ) {
 
