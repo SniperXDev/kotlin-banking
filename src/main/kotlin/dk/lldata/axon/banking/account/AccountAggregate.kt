@@ -15,18 +15,18 @@ class Account {
   constructor() {}
 
   @AggregateIdentifier
-  private var accountId : String? = null
+  private var accountId: String? = null
 
-  var balance : Int = 0
-  var overdraftLimit : Int = 0
+  var balance: Int = 0
+  var overdraftLimit: Int = 0
 
   @CommandHandler
-  constructor(cmd : CreateAccountCommand) {
+  constructor(cmd: CreateAccountCommand) {
     AggregateLifecycle.apply(AccountCreatedEvent(cmd.accountId, cmd.accountId, cmd.overdraftLimit, 0))
   }
 
   @CommandHandler
-  fun handle(cmd : WithdrawMoneyCommand) {
+  fun handle(cmd: WithdrawMoneyCommand) {
     if (balance + overdraftLimit >= cmd.amount) {
       logger.info("Money withdraw accepted account={} balance={}", accountId, balance)
       AggregateLifecycle.apply(MoneyWithdrawnEvent(cmd.accountId, cmd.txId, cmd.amount, balance - cmd.amount))
@@ -37,24 +37,24 @@ class Account {
   }
 
   @CommandHandler
-  fun handle(cmd : DepositMoneyCommand) {
+  fun handle(cmd: DepositMoneyCommand) {
     AggregateLifecycle.apply(MoneyDepositedEvent(cmd.accountId, cmd.txId, cmd.amount, balance + cmd.amount))
   }
 
   @EventSourcingHandler
-  fun on(event : AccountCreatedEvent) {
+  fun on(event: AccountCreatedEvent) {
     this.accountId = event.accountId
     this.overdraftLimit = event.overdraftLimit
   }
 
   @EventSourcingHandler
-  fun on(event : MoneyWithdrawnEvent) {
+  fun on(event: MoneyWithdrawnEvent) {
     this.balance = event.balance
     logger.info("Money deposited account={} balance={}", accountId, balance)
   }
 
   @EventSourcingHandler
-  fun on(event : MoneyDepositedEvent) {
+  fun on(event: MoneyDepositedEvent) {
     this.balance = event.balance
     logger.info("Money deposited account={} balance={}", accountId, balance)
   }

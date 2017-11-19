@@ -9,7 +9,7 @@ private val logger = KotlinLogging.logger {}
 @Component
 class LoggingEventHandler {
   @EventSourcingHandler
-  fun on(event : Any) {
+  fun on(event: Any) {
     logger.info("event {}", event)
   }
 }

@@ -15,30 +15,30 @@ import javax.persistence.Id
 @ProcessingGroup("TrackingProcessingGroup")
 @RestController
 class TransactionHistoryEventHandler(
-    val repo : TransactionHistoryRepository
+    val repo: TransactionHistoryRepository
 ) {
   @EventHandler
-  fun on(event : BalanceUpdatedEvent) {
+  fun on(event: BalanceUpdatedEvent) {
     repo.save(TransactionHistory(event.accountId, event.balance, event.txId))
   }
 
   @GetMapping("/history/{accountId}")
-  fun history(@PathVariable accountId : String) : List<TransactionHistory> {
+  fun history(@PathVariable accountId: String): List<TransactionHistory> {
     return repo.findByAccountId(accountId)
   }
 }
 
 @Entity
 class TransactionHistory(
-    @Basic var accountId : String = "",
-    @Basic var balance : Int = 0,
+    @Basic var accountId: String = "",
+    @Basic var balance: Int = 0,
     @Basic var txId: String = "",
-    @GeneratedValue @Id var id : Long = 0
-    ) {
+    @GeneratedValue @Id var id: Long = 0
+) {
 
 
 }
 
 interface TransactionHistoryRepository : JpaRepository<TransactionHistory, Long> {
-  fun findByAccountId(accountId: String) : List<TransactionHistory>
+  fun findByAccountId(accountId: String): List<TransactionHistory>
 }

@@ -10,16 +10,16 @@ import javax.persistence.Id
 
 @Entity
 class AccountBalance(
-    @Id var accountId : String = "",
-    @Basic var balance : Int = 0
+    @Id var accountId: String = "",
+    @Basic var balance: Int = 0
 ) {
 }
 
 @Component
-class AccountBalanceEventHandler(val repo : AccountBalanceRepository) {
+class AccountBalanceEventHandler(val repo: AccountBalanceRepository) {
 
   @EventHandler
-  fun on(event : BalanceUpdatedEvent) {
+  fun on(event: BalanceUpdatedEvent) {
     repo.save(AccountBalance(event.accountId, event.balance))
   }
 }

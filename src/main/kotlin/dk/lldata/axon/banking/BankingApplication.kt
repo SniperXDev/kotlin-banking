@@ -12,7 +12,7 @@ private val logger = KotlinLogging.logger {}
 @SpringBootApplication
 class BankingApplication {
   @Autowired
-  fun registerTracking(cfg : EventHandlingConfiguration) {
+  fun registerTracking(cfg: EventHandlingConfiguration) {
     logger.info("<< TrackingProcessingGroup registered")
     cfg.registerTrackingProcessor("TrackingProcessingGroup")
   }
