@@ -6,7 +6,6 @@ import dk.lldata.axon.banking.coreapi.MoneyTransferRequestedEvent
 import dk.lldata.axon.banking.coreapi.RequestMoneyTransferCommand
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.commandhandling.model.AggregateIdentifier
-import org.axonframework.commandhandling.model.AggregateLifecycle
 import org.axonframework.commandhandling.model.AggregateLifecycle.apply
 import org.axonframework.commandhandling.model.AggregateLifecycle.markDeleted
 import org.axonframework.eventsourcing.EventSourcingHandler

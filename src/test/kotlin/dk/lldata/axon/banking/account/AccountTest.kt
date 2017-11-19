@@ -1,9 +1,6 @@
 package dk.lldata.axon.banking.account
 
-import dk.lldata.axon.banking.coreapi.AccountCreatedEvent
-import dk.lldata.axon.banking.coreapi.CreateAccountCommand
-import dk.lldata.axon.banking.coreapi.MoneyWithdrawnEvent
-import dk.lldata.axon.banking.coreapi.WithdrawMoneyCommand
+import dk.lldata.axon.banking.coreapi.*
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.junit.Test
 
@@ -27,14 +24,14 @@ class AccountTest {
   @Test
   fun withDrawReasonableAmount() {
     fixture.given(AccountCreatedEvent("1234", 1000))
-        .`when`(WithdrawMoneyCommand("1234", 600))
-        .expectEvents(MoneyWithdrawnEvent("1234", 600, -600))
+        .`when`(WithdrawMoneyCommand("1234", "tx1", 600))
+        .expectEvents(MoneyWithdrawnEvent("1234", "tx1", 600, -600))
   }
 
   @Test
   fun withDrawLargeAmount() {
     fixture.given(AccountCreatedEvent("1234", 1000))
-        .`when`(WithdrawMoneyCommand("1234", 1001))
+        .`when`(WithdrawMoneyCommand("1234", "tx1",1001))
         .expectNoEvents()
         .expectException(OverdraftLimitExceeded::class.java)
   }
@@ -43,10 +40,19 @@ class AccountTest {
   fun withdrawTwice() {
     fixture.given(
         AccountCreatedEvent("1234", 1000),
-        MoneyWithdrawnEvent("1234", 999, -999)
+        MoneyWithdrawnEvent("1234", "tx1", 999, -999)
     )
-        .`when`(WithdrawMoneyCommand("1234", 2))
+        .`when`(WithdrawMoneyCommand("1234", "tx1", 2))
         .expectNoEvents()
         .expectException(OverdraftLimitExceeded::class.java)
   }
+
+  @Test
+  fun deposit() {
+    fixture.given(AccountCreatedEvent("1234", 1000))
+        .`when`(DepositMoneyCommand("1234", "tx1", 500))
+        .expectEvents(MoneyDepositedEvent("1234","tx1",500, 500))
+  }
+
+
 }

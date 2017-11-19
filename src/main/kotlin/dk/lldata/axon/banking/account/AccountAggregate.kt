@@ -1,14 +1,12 @@
 package dk.lldata.axon.banking.account
 
-import dk.lldata.axon.banking.coreapi.AccountCreatedEvent
-import dk.lldata.axon.banking.coreapi.CreateAccountCommand
-import dk.lldata.axon.banking.coreapi.MoneyWithdrawnEvent
-import dk.lldata.axon.banking.coreapi.WithdrawMoneyCommand
+import dk.lldata.axon.banking.coreapi.*
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.commandhandling.model.AggregateIdentifier
 import org.axonframework.commandhandling.model.AggregateLifecycle
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.spring.stereotype.Aggregate
+import java.util.*
 import javax.persistence.Basic
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -35,10 +33,15 @@ class Account {
   @CommandHandler
   fun handle(cmd : WithdrawMoneyCommand) {
     if (balance + overdraftLimit >= cmd.amount) {
-      AggregateLifecycle.apply(MoneyWithdrawnEvent(cmd.accountId, cmd.amount, balance - cmd.amount))
+      AggregateLifecycle.apply(MoneyWithdrawnEvent(cmd.accountId, cmd.txId, cmd.amount, balance - cmd.amount))
     } else {
       throw OverdraftLimitExceeded()
     }
+  }
+
+  @CommandHandler
+  fun handle(cmd : DepositMoneyCommand) {
+    AggregateLifecycle.apply(MoneyDepositedEvent(cmd.accountId, cmd.txId, cmd.amount, balance + cmd.amount))
   }
 
   @EventSourcingHandler
@@ -49,6 +52,11 @@ class Account {
 
   @EventSourcingHandler
   fun on(event : MoneyWithdrawnEvent) {
+    this.balance = event.balance
+  }
+
+  @EventSourcingHandler
+  fun on(event : MoneyDepositedEvent) {
     this.balance = event.balance
   }
 }

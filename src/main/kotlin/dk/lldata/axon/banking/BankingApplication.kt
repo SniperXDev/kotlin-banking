@@ -2,6 +2,7 @@ package dk.lldata.axon.banking
 
 import dk.lldata.axon.banking.account.Account
 import dk.lldata.axon.banking.coreapi.CreateAccountCommand
+import dk.lldata.axon.banking.coreapi.ID
 import dk.lldata.axon.banking.coreapi.WithdrawMoneyCommand
 import org.axonframework.commandhandling.CommandBus
 import org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage
@@ -37,7 +38,7 @@ fun main(args: Array<String>) {
   val cfg = runApplication<BankingApplication>(*args)
   val commandBus = cfg.getBean(CommandBus::class.java)
   commandBus.dispatch(asCommandMessage<CreateAccountCommand>(CreateAccountCommand("1234", 1000)))
-  commandBus.dispatch(asCommandMessage<WithdrawMoneyCommand>(WithdrawMoneyCommand("1234", 500)))
-  commandBus.dispatch(asCommandMessage<WithdrawMoneyCommand>(WithdrawMoneyCommand("1234", 500)))
+  commandBus.dispatch(asCommandMessage<WithdrawMoneyCommand>(WithdrawMoneyCommand("1234", ID.uuid(), 500)))
+  commandBus.dispatch(asCommandMessage<WithdrawMoneyCommand>(WithdrawMoneyCommand("1234", ID.uuid(), 500)))
 }
 
