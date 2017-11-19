@@ -1,13 +1,17 @@
 package dk.lldata.axon.banking
 
 import org.axonframework.commandhandling.CommandBus
-import org.axonframework.spring.config.EnableAxon
+import org.axonframework.config.EventHandlingConfiguration
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
 class BankingApplication {
-
+  @Autowired
+  fun registerTracking(cfg : EventHandlingConfiguration) {
+    cfg.registerTrackingProcessor("TrackingProcessingGroup")
+  }
 }
 
 fun main(args: Array<String>) {

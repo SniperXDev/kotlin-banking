@@ -2,6 +2,7 @@ package dk.lldata.axon.banking.balance
 
 import dk.lldata.axon.banking.coreapi.MoneyDepositedEvent
 import dk.lldata.axon.banking.coreapi.MoneyWithdrawnEvent
+import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,6 +13,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 
+@ProcessingGroup("TrackingProcessingGroup")
 @RestController
 class TransactionHistoryEventHandler(
     val repo : TransactionHistoryRepository
