@@ -22,7 +22,7 @@ class Account {
 
   @CommandHandler
   constructor(cmd : CreateAccountCommand) {
-    AggregateLifecycle.apply(AccountCreatedEvent(cmd.accountId, ID.uuid(), cmd.overdraftLimit, 0))
+    AggregateLifecycle.apply(AccountCreatedEvent(cmd.accountId, cmd.accountId, cmd.overdraftLimit, 0))
   }
 
   @CommandHandler
