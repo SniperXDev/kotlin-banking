@@ -1,9 +1,6 @@
 package dk.lldata.axon.banking.transfer
 
-import dk.lldata.axon.banking.coreapi.DepositMoneyCommand
-import dk.lldata.axon.banking.coreapi.MoneyTransferRequestedEvent
-import dk.lldata.axon.banking.coreapi.MoneyWithdrawnEvent
-import dk.lldata.axon.banking.coreapi.WithdrawMoneyCommand
+import dk.lldata.axon.banking.coreapi.*
 import org.axonframework.test.saga.SagaTestFixture
 import org.junit.Test
 
@@ -28,5 +25,25 @@ class MoneyTransferSagaTest {
         .givenAPublished(MoneyTransferRequestedEvent("tf1", "a1", "a2", 100))
         .whenPublishingA(MoneyWithdrawnEvent("a1", "tf1",100, 500))
         .expectDispatchedCommands(DepositMoneyCommand("a2", "tf1",100))
+  }
+
+  @Test
+  fun transferCompleteAfterDeposit() {
+    fixture
+        .givenAPublished(MoneyTransferRequestedEvent("tf1", "a1", "a2", 100))
+        .andThenAPublished(MoneyWithdrawnEvent("a1", "tf1", 100, 500))
+        .whenPublishingA(MoneyDepositedEvent("a2", "tf1", 100, 400))
+        .expectDispatchedCommands(CompleteMoneyTransferCommand("tf1"))
+  }
+
+  @Test
+  fun sagaEnds() {
+    fixture
+        .givenAPublished(MoneyTransferRequestedEvent("tf1", "a1", "a2", 100))
+        .andThenAPublished(MoneyWithdrawnEvent("a1", "tf1", 100, 500))
+        .andThenAPublished(MoneyDepositedEvent("a2", "tf1", 100, 400))
+        .whenPublishingA(MoneyTransferCompletedEvent("tf1"))
+        .expectActiveSagas(0)
+        .expectNoDispatchedCommands()
   }
 }

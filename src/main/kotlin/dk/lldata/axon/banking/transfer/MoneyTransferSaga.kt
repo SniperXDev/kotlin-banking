@@ -27,4 +27,15 @@ class MoneyTransferSaga {
     commandGateway!!.send<DepositMoneyCommand>(DepositMoneyCommand(this.targetAccount!!, event.txId, event.amount))
   }
 
+  @SagaEventHandler(associationProperty = "txId", keyName = "transferId")
+  fun on(event : MoneyDepositedEvent) {
+    commandGateway!!.send<CompleteMoneyTransferCommand>(CompleteMoneyTransferCommand(event.txId))
+  }
+
+  @EndSaga
+  @SagaEventHandler(associationProperty = "transferId")
+  fun on(event : MoneyTransferCompletedEvent) {
+    // alternative to @EndSaga annotation SagaLifecycle.end()
+  }
+
 }
