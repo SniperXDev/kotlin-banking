@@ -7,9 +7,13 @@ import org.axonframework.commandhandling.model.AggregateLifecycle.apply
 import org.axonframework.commandhandling.model.AggregateLifecycle.markDeleted
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.spring.stereotype.Aggregate
+import javax.persistence.Entity
+import javax.persistence.Id
 
 @Aggregate
+@Entity
 class MoneyTransfer {
+  @Id
   @AggregateIdentifier
   var transferId : String? = null
 

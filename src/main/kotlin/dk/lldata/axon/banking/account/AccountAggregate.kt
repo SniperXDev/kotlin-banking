@@ -13,7 +13,7 @@ import javax.persistence.Id
 
 private val logger = KotlinLogging.logger {}
 
-@Aggregate(repository = "accountRepo")
+@Aggregate
 @Entity
 class Account {
   constructor() {}
