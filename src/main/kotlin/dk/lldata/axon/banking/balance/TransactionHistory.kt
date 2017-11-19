@@ -1,5 +1,6 @@
 package dk.lldata.axon.banking.balance
 
+import dk.lldata.axon.banking.coreapi.BalanceUpdatedEvent
 import dk.lldata.axon.banking.coreapi.MoneyDepositedEvent
 import dk.lldata.axon.banking.coreapi.MoneyWithdrawnEvent
 import org.axonframework.config.ProcessingGroup
@@ -19,11 +20,7 @@ class TransactionHistoryEventHandler(
     val repo : TransactionHistoryRepository
 ) {
   @EventHandler
-  fun on(event : MoneyDepositedEvent) {
-    repo.save(TransactionHistory(event.accountId, event.balance))
-  }
-
-  fun on(event : MoneyWithdrawnEvent) {
+  fun on(event : BalanceUpdatedEvent) {
     repo.save(TransactionHistory(event.accountId, event.balance))
   }
 

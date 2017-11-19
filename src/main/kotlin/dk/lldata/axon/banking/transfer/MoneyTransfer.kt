@@ -11,9 +11,7 @@ import javax.persistence.Entity
 import javax.persistence.Id
 
 @Aggregate
-@Entity
 class MoneyTransfer {
-  @Id
   @AggregateIdentifier
   var transferId : String? = null
 

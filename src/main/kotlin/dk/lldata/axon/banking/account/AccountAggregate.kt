@@ -14,17 +14,13 @@ import javax.persistence.Id
 private val logger = KotlinLogging.logger {}
 
 @Aggregate
-@Entity
 class Account {
   constructor() {}
 
-  @Id
   @AggregateIdentifier
   private var accountId : String? = null
 
-  @Basic
   var balance : Int = 0
-  @Basic
   var overdraftLimit : Int = 0
 
   @CommandHandler

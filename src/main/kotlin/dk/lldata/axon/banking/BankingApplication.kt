@@ -1,16 +1,20 @@
 package dk.lldata.axon.banking
 
+import mu.KotlinLogging
 import org.axonframework.commandhandling.CommandBus
 import org.axonframework.config.EventHandlingConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
+private val logger = KotlinLogging.logger {}
+
 @SpringBootApplication
 class BankingApplication {
   @Autowired
   fun registerTracking(cfg : EventHandlingConfiguration) {
-    cfg.registerTrackingProcessor("TrackingProcessingGroup")
+    logger.info("<< TrackingProcessingGroup registered")
+    cfg.registerTrackingProcessor("dk.lldata.axon.banking.balance")
   }
 }
 
