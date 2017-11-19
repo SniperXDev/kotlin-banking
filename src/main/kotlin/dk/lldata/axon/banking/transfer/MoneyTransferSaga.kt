@@ -1,14 +1,18 @@
 package dk.lldata.axon.banking.transfer
 
+import dk.lldata.axon.banking.account.OverdraftLimitExceeded
 import dk.lldata.axon.banking.coreapi.*
+import org.axonframework.commandhandling.CommandExecutionException
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.saga.EndSaga
 import org.axonframework.eventhandling.saga.SagaEventHandler
 import org.axonframework.eventhandling.saga.SagaLifecycle
 import org.axonframework.eventhandling.saga.StartSaga
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 
 class MoneyTransferSaga {
+  val logger = LoggerFactory.getLogger(MoneyTransferSaga::class.java)
 
   @Autowired @Transient
   var commandGateway : CommandGateway? = null
@@ -19,7 +23,13 @@ class MoneyTransferSaga {
   @SagaEventHandler(associationProperty = "transferId")
   fun on(event : MoneyTransferRequestedEvent) {
     this.targetAccount = event.targetAccountId
-    commandGateway!!.send<WithdrawMoneyCommand>(WithdrawMoneyCommand(event.sourceAccountId, event.transferId, event.amount))
+    logger.info("Money transfer requested from={} to={} amount={}", event.sourceAccountId, event.targetAccountId, event.amount)
+    try {
+      commandGateway!!.sendAndWait<WithdrawMoneyCommand>(WithdrawMoneyCommand(event.sourceAccountId, event.transferId, event.amount))
+      logger.info("Money withdraw command success tx={}", event.transferId)
+    } catch (e : Exception) {
+      commandGateway!!.send<CancelMoneyTransferCommand>(CancelMoneyTransferCommand(event.transferId))
+    }
   }
 
   @SagaEventHandler(associationProperty = "txId", keyName = "transferId")
@@ -35,6 +45,12 @@ class MoneyTransferSaga {
   @EndSaga
   @SagaEventHandler(associationProperty = "transferId")
   fun on(event : MoneyTransferCompletedEvent) {
+    // alternative to @EndSaga annotation SagaLifecycle.end()
+  }
+
+  @EndSaga
+  @SagaEventHandler(associationProperty = "transferId")
+  fun on(event : MoneyTransferCancelledEvent) {
     // alternative to @EndSaga annotation SagaLifecycle.end()
   }
 

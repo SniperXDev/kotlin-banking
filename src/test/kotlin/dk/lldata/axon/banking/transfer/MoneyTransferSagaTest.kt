@@ -1,9 +1,11 @@
 package dk.lldata.axon.banking.transfer
 
 import dk.lldata.axon.banking.coreapi.*
+import org.axonframework.spring.stereotype.Saga
 import org.axonframework.test.saga.SagaTestFixture
 import org.junit.Test
 
+@Saga
 class MoneyTransferSagaTest {
   val fixture : SagaTestFixture<MoneyTransferSaga>
 
@@ -46,4 +48,18 @@ class MoneyTransferSagaTest {
         .expectActiveSagas(0)
         .expectNoDispatchedCommands()
   }
+
+//  Hmmm. Not as easy to test as I imagined ..
+//  @Test
+//  fun moneyTransferRequestExceedLimit() {
+//    fixture.givenAPublished(AccountCreatedEvent("a1", 1000))
+//        .andThenAPublished(AccountCreatedEvent("a2", 1000))
+//        .whenPublishingA(MoneyTransferRequestedEvent("tf1", "a1", "a2", 10000))
+//        .expectActiveSagas(1)
+//        .expectDispatchedCommands(WithdrawMoneyCommand("a1", "tf1",10000))
+//        .expectNoScheduledEvents()
+//        //.expectActiveSagas(0)
+//        .expectDispatchedCommands(CancelMoneyTransferCommand("tf1"))
+//  }
+
 }
