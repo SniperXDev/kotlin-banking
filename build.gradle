@@ -42,6 +42,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jre8")
 	compile("org.jetbrains.kotlin:kotlin-reflect")
+	compile 'io.github.microutils:kotlin-logging:1.4.6'
 	runtime('com.h2database:h2')
 	compile('org.axonframework:axon-spring:3.0.7')
 	testCompile('org.springframework.boot:spring-boot-starter-test')

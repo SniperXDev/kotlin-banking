@@ -1,22 +1,21 @@
 package dk.lldata.axon.banking.account
 
 import dk.lldata.axon.banking.coreapi.*
-import dk.lldata.axon.banking.transfer.LoggingEventHandler
+import mu.KotlinLogging
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.commandhandling.model.AggregateIdentifier
 import org.axonframework.commandhandling.model.AggregateLifecycle
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.spring.stereotype.Aggregate
-import org.slf4j.LoggerFactory
 import javax.persistence.Basic
 import javax.persistence.Entity
 import javax.persistence.Id
 
+private val logger = KotlinLogging.logger {}
+
 @Aggregate(repository = "accountRepo")
 @Entity
 class Account {
-  val logger = LoggerFactory.getLogger(Account::class.java)
-
   constructor() {}
 
   @Id

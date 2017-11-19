@@ -1,9 +1,6 @@
 package dk.lldata.axon.banking.transfer
 
-import dk.lldata.axon.banking.coreapi.CompleteMoneyTransferCommand
-import dk.lldata.axon.banking.coreapi.MoneyTransferCompletedEvent
-import dk.lldata.axon.banking.coreapi.MoneyTransferRequestedEvent
-import dk.lldata.axon.banking.coreapi.RequestMoneyTransferCommand
+import dk.lldata.axon.banking.coreapi.*
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.commandhandling.model.AggregateIdentifier
 import org.axonframework.commandhandling.model.AggregateLifecycle.apply
@@ -28,6 +25,11 @@ class MoneyTransfer {
     apply(MoneyTransferCompletedEvent(cmd.transferId))
   }
 
+  @CommandHandler
+  fun handle(cmd : CancelMoneyTransferCommand) {
+    apply(MoneyTransferCancelledEvent(cmd.transferId))
+  }
+
   @EventSourcingHandler
   fun on(event : MoneyTransferRequestedEvent) {
     this.transferId = event.transferId
@@ -35,6 +37,11 @@ class MoneyTransfer {
 
   @EventSourcingHandler
   fun on(event : MoneyTransferCompletedEvent) {
+    markDeleted()
+  }
+
+  @EventSourcingHandler
+  fun on(event : MoneyTransferCancelledEvent) {
     markDeleted()
   }
 }

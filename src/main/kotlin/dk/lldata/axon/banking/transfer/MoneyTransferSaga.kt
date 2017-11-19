@@ -1,19 +1,18 @@
 package dk.lldata.axon.banking.transfer
 
-import dk.lldata.axon.banking.account.OverdraftLimitExceeded
 import dk.lldata.axon.banking.coreapi.*
-import org.axonframework.commandhandling.CommandExecutionException
+import mu.KotlinLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.eventhandling.saga.EndSaga
 import org.axonframework.eventhandling.saga.SagaEventHandler
-import org.axonframework.eventhandling.saga.SagaLifecycle
 import org.axonframework.eventhandling.saga.StartSaga
-import org.slf4j.LoggerFactory
+import org.axonframework.spring.stereotype.Saga
 import org.springframework.beans.factory.annotation.Autowired
 
-class MoneyTransferSaga {
-  val logger = LoggerFactory.getLogger(MoneyTransferSaga::class.java)
+private val logger = KotlinLogging.logger {}
 
+@Saga
+class MoneyTransferSaga {
   @Autowired @Transient
   var commandGateway : CommandGateway? = null
 
