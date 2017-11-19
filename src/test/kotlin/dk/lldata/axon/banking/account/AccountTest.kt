@@ -38,4 +38,15 @@ class AccountTest {
         .expectNoEvents()
         .expectException(OverdraftLimitExceeded::class.java)
   }
+
+  @Test
+  fun withdrawTwice() {
+    fixture.given(
+        AccountCreatedEvent("1234", 1000),
+        MoneyWithdrawnEvent("1234", 999, -999)
+    )
+        .`when`(WithdrawMoneyCommand("1234", 2))
+        .expectNoEvents()
+        .expectException(OverdraftLimitExceeded::class.java)
+  }
 }
