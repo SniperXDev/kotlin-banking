@@ -1,7 +1,7 @@
 buildscript {
 	ext {
-		kotlinVersion = '1.1.60'
-		springBootVersion = '2.0.0.M6'
+		kotlinVersion = '1.2.0'
+		springBootVersion = '2.0.0.M7'
 	}
 	repositories {
 		mavenCentral()
@@ -46,8 +46,8 @@ dependencies {
 	compile('io.github.microutils:kotlin-logging:1.4.6')
 	runtime('com.h2database:h2')
 //	compile('org.axonframework:axon-spring:3.0.7')
-	compile('org.axonframework:axon-spring-boot-autoconfigure:3.0.7')
+	compile('org.axonframework:axon-spring-boot-autoconfigure:3.1.0')
 //	compile('org.axonframework:axon-spring-boot-autoconfigure:3.0.7')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.axonframework:axon-test:3.0.7')
+	testCompile('org.axonframework:axon-test:3.1.0')
 }
