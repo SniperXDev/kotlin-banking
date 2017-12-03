@@ -8,11 +8,7 @@ import org.junit.Test
 //import org.axonframework.test.Fixtures;
 
 class AccountTest {
-  var fixture: AggregateTestFixture<Account>
-
-  constructor() {
-    fixture = AggregateTestFixture(Account::class.java)
-  }
+  var fixture = AggregateTestFixture(Account::class.java)
 
   @Test
   fun createAccount() {

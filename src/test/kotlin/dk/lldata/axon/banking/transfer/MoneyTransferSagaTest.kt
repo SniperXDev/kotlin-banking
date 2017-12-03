@@ -7,11 +7,7 @@ import org.junit.Test
 
 @Saga
 class MoneyTransferSagaTest {
-  val fixture : SagaTestFixture<MoneyTransferSaga>
-
-  constructor() {
-    fixture = SagaTestFixture(MoneyTransferSaga::class.java)
-  }
+  val fixture = SagaTestFixture(MoneyTransferSaga::class.java)
 
   @Test
   fun moneyTransferRequestTest() {

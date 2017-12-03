@@ -15,7 +15,7 @@ class Account {
   constructor() {}
 
   @AggregateIdentifier
-  private var accountId: String? = null
+  var accountId: String? = null
 
   var balance: Int = 0
   var overdraftLimit: Int = 0

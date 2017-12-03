@@ -1,6 +1,5 @@
 package dk.lldata.axon.banking.rest
 
-import dk.lldata.axon.banking.balance.AccountBalance
 import dk.lldata.axon.banking.balance.AccountBalanceRepository
 import dk.lldata.axon.banking.coreapi.CreateAccountCommand
 import dk.lldata.axon.banking.coreapi.ID
@@ -12,29 +11,25 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(path = arrayOf("/test"))
+@RequestMapping(path = ["/test"])
 class TestRestService(
     val commandGateway: CommandGateway,
     val accountBalanceRepository: AccountBalanceRepository
 ) {
 
-  @RequestMapping(path = arrayOf("/create/{accountId}"), method = arrayOf(RequestMethod.GET))
+  @RequestMapping(path = ["/create/{accountId}"], method = [RequestMethod.GET])
   fun create(@PathVariable accountId: String) {
     commandGateway.send<CreateAccountCommand>(CreateAccountCommand(accountId, 1000))
   }
 
-  @RequestMapping(path = arrayOf("/transfer/{from}/{to}"), method = arrayOf(RequestMethod.GET))
+  @RequestMapping(path = ["/transfer/{from}/{to}"], method = [RequestMethod.GET])
   fun transfer(@PathVariable from: String, @PathVariable to: String) {
     commandGateway.send<RequestMoneyTransferCommand>(RequestMoneyTransferCommand(ID.uuid(), from, to, 1 + (Math.random() * 20).toInt()))
   }
 
-  @RequestMapping(path = arrayOf("/balance/{accountId}"), method = arrayOf(RequestMethod.GET))
-  fun balance(@PathVariable accountId: String): AccountBalance {
-    return accountBalanceRepository.findById(accountId).get()
-  }
+  @RequestMapping(path = ["/balance/{accountId}"], method = [RequestMethod.GET])
+  fun balance(@PathVariable accountId: String) = accountBalanceRepository.findById(accountId).get()
 
-  @RequestMapping(path = arrayOf("/hello"), method = arrayOf(RequestMethod.GET))
-  fun hello(): String {
-    return "OK"
-  }
+  @RequestMapping(path = ["/hello"], method = [RequestMethod.GET])
+  fun hello() = "OK"
 }
