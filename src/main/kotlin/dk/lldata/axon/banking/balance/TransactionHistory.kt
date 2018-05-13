@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue
 import javax.persistence.Id
 
 @ProcessingGroup("TrackingProcessingGroup")
-@RestController
 class TransactionHistoryEventHandler(
     val repo: TransactionHistoryRepository
 ) {
@@ -21,7 +20,12 @@ class TransactionHistoryEventHandler(
   fun on(event: BalanceUpdatedEvent) {
     repo.save(TransactionHistory(event.accountId, event.balance, event.txId))
   }
+}
 
+@RestController
+class TransactionHistoryRestController(
+    val repo: TransactionHistoryRepository
+) {
   @GetMapping("/history/{accountId}")
   fun history(@PathVariable accountId: String): List<TransactionHistory> {
     return repo.findByAccountId(accountId)
@@ -35,10 +39,14 @@ class TransactionHistory(
     @Basic var txId: String = "",
     @GeneratedValue @Id var id: Long = 0
 ) {
-
-
+  override fun toString(): String {
+    return "tx[id=$id, account=$accountId, tx=$txId, balance=$balance]"
+  }
 }
 
-interface TransactionHistoryRepository : JpaRepository<TransactionHistory, Long> {
+interface TransactionHistoryRepository {
   fun findByAccountId(accountId: String): List<TransactionHistory>
+  fun save(history: TransactionHistory)
 }
+
+interface TransactionHistoryJpaRepository : TransactionHistoryRepository, JpaRepository<TransactionHistory, Long>
